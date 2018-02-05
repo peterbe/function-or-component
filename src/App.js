@@ -40,15 +40,6 @@ class App extends Component {
         btn.click();
       }
     }, 500);
-
-    if (this.terminalTimeout) {
-      clearTimeout(this.terminalTimeout);
-    }
-    this.terminalTimeout = setTimeout(() => {
-      console.log('Forcing the stop the click monkey');
-      this.stopClickMonkey(null);
-    }, 60 * 1000);
-    console.log('The click monkey will stop after 60 seconds.');
   };
 
   stopClickMonkey = event => {
