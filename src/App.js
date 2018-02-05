@@ -8,38 +8,8 @@ import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
 
 window.timings = {};
 
-window.clickMonkey = () => {
-  window.interval1 = setInterval(() => {
-    const links = document.querySelectorAll('a.choice:not(.active)');
-    if (links.length) {
-      const choice = links[Math.floor(Math.random() * links.length)];
-      choice.click();
-    }
-  }, 2000);
-  window.interval2 = setInterval(() => {
-    const btn = document.querySelector('button');
-    if (btn) {
-      btn.click();
-    }
-  }, 500);
-
-  console.log(
-    "Type   stopMonkey()\nwhen you're ready to stop the monkeying clicks."
-  );
-};
-
-console.log("Type   clickMonkey()\nwhen you're ready to automate clicks");
-window.stopMonkey = () => {
-  if (window.interval1) {
-    window.clearInterval(window.interval1);
-  }
-  if (window.interval2) {
-    window.clearInterval(window.interval2);
-  }
-};
-
 class App extends Component {
-  state = { count: 0 };
+  state = { count: 0, monkeying: false };
   incr = event => {
     window.beforeSetState = performance.now();
     this.setState(prevState => ({
@@ -50,6 +20,52 @@ class App extends Component {
     window.timings = {};
     this.setState({ count: 0 });
   };
+  startClickMonkey = event => {
+    this.setState({ monkeying: true }, () => {
+      this.clickMonkey();
+    });
+  };
+
+  clickMonkey = () => {
+    this.interval1 = setInterval(() => {
+      const links = document.querySelectorAll('a.choice:not(.active)');
+      if (links.length) {
+        const choice = links[Math.floor(Math.random() * links.length)];
+        choice.click();
+      }
+    }, 2000);
+    this.interval2 = setInterval(() => {
+      const btn = document.querySelector('button.increment');
+      if (btn) {
+        btn.click();
+      }
+    }, 500);
+
+    if (this.terminalTimeout) {
+      clearTimeout(this.terminalTimeout);
+    }
+    this.terminalTimeout = setTimeout(() => {
+      console.log('Forcing the stop the click monkey');
+      this.stopMonkey();
+    }, 60 * 1000);
+    console.log('The click monkey will stop after 60 seconds.');
+  };
+
+  stopClickMonkey = event => {
+    this.setState({ monkeying: false }, () => {
+      this.stopMonkey();
+    });
+  };
+
+  stopMonkey = () => {
+    if (this.interval1) {
+      clearInterval(this.interval1);
+    }
+    if (this.interval2) {
+      clearInterval(this.interval2);
+    }
+  };
+
   render() {
     return (
       <Router>
@@ -102,6 +118,7 @@ class App extends Component {
             </div>
 
             <button
+              className="increment"
               style={{ fontSize: '120%' }}
               type="button"
               onClick={this.incr}
@@ -134,9 +151,15 @@ class App extends Component {
               rendering times of the three different component styles.
             </p>
             <p>
-              Alternatively open your browser Console and type{' '}
-              <code>clickMonkey()</code> to get it doing the random clicking for
-              you.
+              {this.state.monkeying ? (
+                <button onClick={this.stopClickMonkey}>
+                  Stop Click Monkey
+                </button>
+              ) : (
+                <button onClick={this.startClickMonkey}>
+                  Start Click Monkey
+                </button>
+              )}
             </p>
             <p>
               <small>
@@ -265,6 +288,12 @@ class UpdateTimings extends React.Component {
             })}
           </tbody>
         </table>
+        <p>
+          <small>
+            <b>Tip!</b>
+            Focus on the median, not the mean.
+          </small>
+        </p>
         <div style={{ width: '50%' }}>
           <canvas id="chart" width="400" height="400" />
         </div>
