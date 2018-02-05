@@ -46,7 +46,7 @@ class App extends Component {
     }
     this.terminalTimeout = setTimeout(() => {
       console.log('Forcing the stop the click monkey');
-      this.stopMonkey();
+      this.stopClickMonkey(null);
     }, 60 * 1000);
     console.log('The click monkey will stop after 60 seconds.');
   };
