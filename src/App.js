@@ -39,7 +39,7 @@ class App extends Component {
       if (btn) {
         btn.click();
       }
-    }, 500);
+    }, 300);
   };
 
   stopClickMonkey = event => {
@@ -285,7 +285,7 @@ class UpdateTimings extends React.Component {
             Focus on the median, not the mean.
           </small>
         </p>
-        <div style={{ width: '50%' }}>
+        <div style={{ maxWidth: 400 }}>
           <canvas id="chart" width="400" height="400" />
         </div>
       </div>
