@@ -1,5 +1,7 @@
 # Function or Component
 
+DEMO and BENCHMARK: https://www.peterbe.com/plog/component-or-function-in-react
+
 A demo app to test the performance of rendering React components
 in different ways.
 
